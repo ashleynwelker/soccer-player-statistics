@@ -10,24 +10,8 @@ import java.util.Scanner;
  */
 public class FileDemo {
 
-       /**
-     * Write the array of data to the file specified.
-     * 
-     * @param filename The file name
-     * @param data     The data to be written
-     * @throws FileNotFoundException
-     */
-    // we will chanse de imput to string[]
-    public static void writeData(String filename, Object[] data) throws FileNotFoundException {
-        try (PrintWriter file = new PrintWriter(filename)) {
-            for (Object d : data) {
-                file.println(d);
-            }
-            file.flush();
-        }
-    }
 
-    // update datas
+    // update data
 
     /**
      * Read double values from the file specified. Ignore any lines that contain

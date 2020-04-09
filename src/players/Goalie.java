@@ -20,6 +20,7 @@ public class Goalie extends Player {
 
     /*********** Class Constructors ******************/
     public Goalie() {
+        super();
         this.position = "players.Goalie";
         this.shotAgainstGoal = 0;
         this.saves = 0;

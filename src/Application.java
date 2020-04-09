@@ -1,11 +1,13 @@
 import menu.Menu;
 
+import java.io.FileNotFoundException;
+
 /**
  * Application to demonstrate using the Menu framework
  */
 public class Application {
 
-    public static void main(String[] argv) {
+    public static void main(String[] argv) throws FileNotFoundException {
         System.out.println();
         System.out.println("Welcome to our application. We hope you like it.");
         System.out.println();

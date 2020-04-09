@@ -1,5 +1,6 @@
 package menu;
 
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
@@ -70,7 +71,7 @@ public abstract class Menu {
      * @param key
      * @return false if the menu should exit and return to whatever called it.
      */
-    protected abstract boolean handleMenuSelection(char key);
+    protected abstract boolean handleMenuSelection(char key) throws FileNotFoundException;
 
 
     /**
@@ -78,7 +79,7 @@ public abstract class Menu {
      * menu is closed and returns to whatever called
      * it.
      */
-    public void display() {
+    public void display() throws FileNotFoundException {
 
         boolean keepGoing = true;
 

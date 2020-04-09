@@ -20,6 +20,7 @@ public class Fielder extends Player {
 
     /*********** Class Constructors ******************/
     public Fielder() {
+        super();
         this.position = "";
         this.shotWide = 0;
         this.shotGoal = 0;

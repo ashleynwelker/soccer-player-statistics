@@ -14,11 +14,9 @@ import java.io.FileNotFoundException;
  * Our application's main menu.
  */
 public class MainMenu extends Menu {
-    public static ArrayList<Player> playerList = new ArrayList<Player>();
     public Player statPlayer;
     //private String userInputValue = null;
-    private static final String FILENAME = "Data.txt";
-    private static MenuItem[] menuItems = new MenuItem[] {
+       private static MenuItem[] menuItems = new MenuItem[] {
             new MenuItem('1', "Add players"),
             new MenuItem('2', "Edit existing players"),
             new MenuItem('3', "Enter player statistics"),
@@ -49,15 +47,15 @@ public class MainMenu extends Menu {
     }
 
     @Override
-    protected boolean handleMenuSelection(char key) {
+    protected boolean handleMenuSelection(char key) throws FileNotFoundException {
         switch(Character.toUpperCase(key)) {
             case '1':
                 addPlayer();
-                updateFile();
+                Utility.writeData();
                 break;
             case '2':
                 editPlayer();
-                updateFile();
+                Utility.writeData();
                 break;
             case '3':
                 addStats();
@@ -66,6 +64,7 @@ public class MainMenu extends Menu {
                 displayPlayerList();
                 break;
             case 'X':
+                Utility.writeData();
                 return false;
             default:
                 System.out.println("Please enter a valid selection");
@@ -77,14 +76,14 @@ public class MainMenu extends Menu {
     /**
      * Transfer program control to the stat-sub-menu.
      */
-    private void callStatGoalieSM(Goalie goalie) {
+    private void callStatGoalieSM(Goalie goalie) throws FileNotFoundException {
         new StatGoalieSM(goalie).display();
     }
 
     /**
      * Transfer program control to the stat-sub-menu.
      */
-    private void callStatFielderSM(Fielder fielder) {
+    private void callStatFielderSM(Fielder fielder) throws FileNotFoundException {
         new StatFielderSM(fielder).display();
     }
 
@@ -92,7 +91,7 @@ public class MainMenu extends Menu {
      * Transfer program control to the edit-sub-menu.
      * @param player
      */
-    private void callEditSubMenu(Player player) {
+    private void callEditSubMenu(Player player) throws FileNotFoundException {
         new EditSubMenu(player).display();
     }
 
@@ -114,9 +113,9 @@ public class MainMenu extends Menu {
         jerseyNum = parseInt(prompt("Enter the player's jersey number: "));
         position = prompt("Enter the player's position\n (If player is a goalie only type the 'g' character): ");
         if (position.length() == 1 && position.charAt(0) == 'g') {
-            playerList.add(new Goalie(fName, lName, jerseyNum));
+            Utility.getPlayerList().add(new Goalie(fName, lName, jerseyNum));
         } else {
-            playerList.add(new Fielder(fName,lName, jerseyNum, position));
+            Utility.getPlayerList().add(new Fielder(fName,lName, jerseyNum, position));
         }
     }
 
@@ -128,10 +127,14 @@ public class MainMenu extends Menu {
     private void editPlayer() {
         displayPlayerList();
         int playerID = Integer.parseInt(prompt("Enter the playerID you wish to edit: "));
-       playerList.forEach(player -> {
+       Utility.getPlayerList().forEach(player -> {
            if (player.getPlayerID() == playerID) {
                Player editPlayer = player;
-               callEditSubMenu(editPlayer);
+               try {
+                   callEditSubMenu(editPlayer);
+               } catch (FileNotFoundException e) {
+                   e.printStackTrace();
+               }
            }
        });
 
@@ -150,15 +153,23 @@ public class MainMenu extends Menu {
             addStats();
         }
         if (parseInt(in) >= 0 && parseInt(in) < 100) {
-            playerList.forEach(player -> {
+            Utility.getPlayerList().forEach(player -> {
                 if (player.getJersey() == parseInt(in) && player instanceof Goalie) {
                     //var 
                     Goalie goaliePlayer = (Goalie) player;
-                    callStatGoalieSM(goaliePlayer);
+                    try {
+                        callStatGoalieSM(goaliePlayer);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 } else if (player.getJersey() == parseInt(in) && player instanceof Fielder) {
                     //var 
                     Fielder fielderPlayer = (Fielder) player;
-                    callStatFielderSM(fielderPlayer);
+                    try {
+                        callStatFielderSM(fielderPlayer);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }
@@ -173,7 +184,7 @@ public class MainMenu extends Menu {
     protected void displayPlayerList() {
         System.out.println("**********************************");
         System.out.println("PlayerID:  Jersey:  Player: \n");
-        playerList.forEach(player -> {
+        Utility.getPlayerList().forEach(player -> {
             System.out.format("  %-9d %-7d %9s\n", player.getPlayerID(),
                     player.getJersey(), getFullName(player.getfName(), player.getlName()));
         });
@@ -182,22 +193,7 @@ public class MainMenu extends Menu {
     }
 
     public boolean deletePlayer(Player player) {
-        playerList.remove(player);
+        Utility.getPlayerList().remove(player);
         return true;
     }
-    private void updateFile() {
-       
-            // Convert ArrayList to array
-          ArrayList<Player> one=playerList;
-          Object[] objects = one.toArray(new Object[] {});
-          // Write the data to the file
-          try {
-              FileDemo files=new FileDemo();
-              files.writeData(FILENAME, objects);
-          } catch (FileNotFoundException exception) {
-              System.err.println("Couldn't find the file to write");
-          }
-          System.out.println("You have finish !! to update!!");
-    }
-
 }
